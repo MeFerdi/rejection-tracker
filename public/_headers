@@ -1,0 +1,22 @@
+# Cloudflare Pages — response headers
+
+# Service worker must never be cached long-term
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+  Service-Worker-Allowed: /
+
+# Workbox runtime files — same as SW
+/workbox-*.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Hashed assets can be cached forever
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Icons
+/icons/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Manifest — short cache so installs pick up changes
+/manifest.json
+  Cache-Control: public, max-age=3600
