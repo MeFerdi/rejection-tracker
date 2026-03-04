@@ -81,7 +81,7 @@ export function useApplications() {
   }, [apps]);
 
   return {
-    apps, form, setForm,
+    apps, setApps, form, setForm,
     editId, stats, loading,
     add, update, remove,
     startEdit, cancelEdit, submit,
