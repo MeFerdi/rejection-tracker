@@ -1,15 +1,13 @@
-// ─────────────────────────────────────────────
-// App.jsx — Root layout, view router, PWA state hub
-// ─────────────────────────────────────────────
-
 import { useState } from "react";
 import { colors } from "./styles/theme";
 import { useApplications } from "./hooks/useApplications";
 import { usePWA }          from "./hooks/usePWA";
+import { getAll }          from "./utils/db";
 
 import Header         from "./components/Header";
 import QuoteBar       from "./components/QuoteBar";
 import InstallBanner  from "./components/InstallBanner";
+import ImportModal    from "./components/ImportModal";
 import { OfflineBar, UpdateBar } from "./components/StatusBars";
 
 import Dashboard from "./views/Dashboard";
@@ -17,13 +15,15 @@ import Log       from "./views/Log";
 import AddEdit   from "./views/AddEdit";
 
 export default function App() {
-  const [view, setView]           = useState("dashboard");
+  const [view,        setView]        = useState("dashboard");
   const [showInstall, setShowInstall] = useState(true);
+  const [showImport,  setShowImport]  = useState(false);
 
   const {
     apps, form, setForm,
     editId, stats, loading,
     remove, startEdit, cancelEdit, submit,
+    setApps,
   } = useApplications();
 
   const {
@@ -51,6 +51,12 @@ export default function App() {
     setView(v);
   };
 
+  // Re-hydrate all state from IndexedDB after an import completes
+  const handleImportComplete = async () => {
+    const fresh = await getAll();
+    setApps(fresh);
+  };
+
   if (loading) {
     return (
       <div style={styles.loading}>
@@ -61,17 +67,21 @@ export default function App() {
 
   return (
     <div style={styles.shell}>
-      {/* PWA status bars */}
-      {!isOnline                          && <OfflineBar />}
-      {updateAvailable                    && <UpdateBar onUpdate={applyUpdate} />}
-      {canInstall && showInstall          && (
+      {!isOnline       && <OfflineBar />}
+      {updateAvailable && <UpdateBar onUpdate={applyUpdate} />}
+      {canInstall && showInstall && (
         <InstallBanner
           onInstall={promptInstall}
           onDismiss={() => setShowInstall(false)}
         />
       )}
 
-      <Header view={view} setView={handleSetView} apps={apps} />
+      <Header
+        view={view}
+        setView={handleSetView}
+        apps={apps}
+        onImport={() => setShowImport(true)}
+      />
 
       <main style={styles.main}>
         {view === "dashboard" && <Dashboard apps={apps} stats={stats} />}
@@ -88,6 +98,14 @@ export default function App() {
       </main>
 
       <QuoteBar />
+
+      {showImport && (
+        <ImportModal
+          existingApps={apps}
+          onComplete={handleImportComplete}
+          onClose={() => setShowImport(false)}
+        />
+      )}
     </div>
   );
 }
