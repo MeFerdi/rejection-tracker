@@ -1,7 +1,7 @@
 import { fonts, colors } from "../styles/theme";
 import { exportToCSV } from "../utils/exportCSV";
 
-export default function Header({ view, setView, apps }) {
+export default function Header({ view, setView, apps, onImport }) {
   const NAV = [
     { key: "dashboard", label: "Overview" },
     { key: "log",       label: "Log"      },
@@ -30,11 +30,18 @@ export default function Header({ view, setView, apps }) {
         ))}
       </nav>
 
-      {apps.length > 0 && (
-        <button style={styles.exportBtn} onClick={() => exportToCSV(apps)}>
-          Export CSV ↓
+      <div style={styles.actions}>
+        {/* Import — always visible so you can sync on a fresh device */}
+        <button style={styles.importBtn} onClick={onImport} title="Import CSV from another device">
+          ↑ Import
         </button>
-      )}
+
+        {apps.length > 0 && (
+          <button style={styles.exportBtn} onClick={() => exportToCSV(apps)} title="Export to CSV">
+            ↓ Export
+          </button>
+        )}
+      </div>
     </header>
   );
 }
@@ -93,7 +100,6 @@ const styles = {
     fontSize: 13,
     color: colors.muted,
     cursor: "pointer",
-    transition: "background 0.15s",
   },
   navActive: {
     padding: "8px 20px",
@@ -106,8 +112,23 @@ const styles = {
     cursor: "pointer",
     fontWeight: 600,
   },
+  actions: {
+    display: "flex",
+    gap: 8,
+    alignItems: "center",
+  },
+  importBtn: {
+    padding: "8px 16px",
+    background: "transparent",
+    border: `1px solid ${colors.rule}`,
+    borderRadius: 6,
+    fontFamily: fonts.body,
+    fontSize: 13,
+    color: colors.muted,
+    cursor: "pointer",
+  },
   exportBtn: {
-    padding: "8px 18px",
+    padding: "8px 16px",
     background: "transparent",
     border: `1px solid ${colors.ink}`,
     borderRadius: 6,
