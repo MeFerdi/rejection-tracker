@@ -11,6 +11,7 @@ import ImportModal    from "./components/ImportModal";
 import { OfflineBar, UpdateBar } from "./components/StatusBars";
 
 import Dashboard from "./views/Dashboard";
+import Board     from "./views/Board";
 import Log       from "./views/Log";
 import AddEdit   from "./views/AddEdit";
 
@@ -85,6 +86,7 @@ export default function App() {
 
       <main style={styles.main}>
         {view === "dashboard" && <Dashboard apps={apps} stats={stats} />}
+        {view === "board"     && <Board apps={apps} onEdit={handleEdit} onDelete={remove} />}
         {view === "log"       && <Log apps={apps} onEdit={handleEdit} onDelete={remove} />}
         {view === "add"       && (
           <AddEdit
