@@ -1,4 +1,4 @@
- const fonts = {
+export const fonts = {
   display: `'Playfair Display', Georgia, serif`,
   body: `'DM Sans', 'Helvetica Neue', sans-serif`,
   mono: `'DM Mono', 'Courier New', monospace`,
