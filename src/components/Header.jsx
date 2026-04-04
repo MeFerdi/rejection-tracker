@@ -4,6 +4,7 @@ import { exportToCSV } from "../utils/exportCSV";
 export default function Header({ view, setView, apps, onImport }) {
   const NAV = [
     { key: "dashboard", label: "Overview" },
+    { key: "board",     label: "Board"    },
     { key: "log",       label: "Log"      },
     { key: "add",       label: "Add"      },
   ];
