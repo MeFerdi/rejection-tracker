@@ -4,7 +4,7 @@ const sanitise = (val) => String(val ?? "").replace(/^[=+\-@\t\r]/, "'$&");
 export const exportToCSV = (applications) => {
   const headers = [
     "ID", "#", "Company", "Role", "Location",
-    "Salary Range", "Status", "Date Applied", "Notes",
+    "Salary Range", "Category", "Priority", "Follow-up Date", "Status", "Date Applied", "Status Updated On", "Status History", "Notes",
   ];
 
   const rows = applications.map((a, i) => [
@@ -14,8 +14,13 @@ export const exportToCSV = (applications) => {
     escape(sanitise(a.role)),
     escape(sanitise(a.location)),
     escape(sanitise(a.salary)),
+    escape(sanitise(a.category)),
+    escape(sanitise(a.priority)),
+    escape(a.followUpDate || ""),
     escape(a.status),
     escape(a.date),
+    escape(a.statusDate || a.updatedAt || a.date),
+    escape(JSON.stringify(a.statusHistory || [])),
     escape(sanitise(a.notes)),
   ]);
 

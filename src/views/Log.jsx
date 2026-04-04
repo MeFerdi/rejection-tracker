@@ -1,24 +1,22 @@
-// ─────────────────────────────────────────────
-// views/Log.jsx
-// ─────────────────────────────────────────────
-
 import { useState, useMemo } from "react";
-import { fonts, colors, STATUS_CONFIG } from "../styles/theme";
+import { fonts, colors, STATUS_CONFIG, CATEGORY_CONFIG } from "../styles/theme";
 import AppRow from "../components/AppRow";
 
 export default function Log({ apps, onEdit, onDelete }) {
   const [search, setSearch]           = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
+  const [filterCategory, setFilterCategory] = useState("All");
 
   const filtered = useMemo(() => {
     return apps
       .filter((a) => filterStatus === "All" || a.status === filterStatus)
+      .filter((a) => filterCategory === "All" || a.category === filterCategory)
       .filter((a) =>
         a.company.toLowerCase().includes(search.toLowerCase()) ||
         a.role.toLowerCase().includes(search.toLowerCase())
       )
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
-  }, [apps, search, filterStatus]);
+      .sort((a, b) => new Date(b.updatedAt || b.statusDate || b.date) - new Date(a.updatedAt || a.statusDate || a.date));
+  }, [apps, search, filterStatus, filterCategory]);
 
   return (
     <div style={styles.page}>
@@ -30,16 +28,29 @@ export default function Log({ apps, onEdit, onDelete }) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <div style={styles.filters}>
-          {["All", ...Object.keys(STATUS_CONFIG)].map((s) => (
-            <button
-              key={s}
-              style={filterStatus === s ? styles.filterActive : styles.filter}
-              onClick={() => setFilterStatus(s)}
-            >
-              {s}
-            </button>
-          ))}
+        <div style={styles.filterGroup}>
+          <div style={styles.filters}>
+            {["All", ...Object.keys(STATUS_CONFIG)].map((s) => (
+              <button
+                key={s}
+                style={filterStatus === s ? styles.filterActive : styles.filter}
+                onClick={() => setFilterStatus(s)}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+          <div style={styles.filters}>
+            {["All", ...Object.keys(CATEGORY_CONFIG)].map((s) => (
+              <button
+                key={s}
+                style={filterCategory === s ? styles.filterActive : styles.filter}
+                onClick={() => setFilterCategory(s)}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
         </div>
         <span style={styles.count}>{filtered.length} entries</span>
       </div>
@@ -102,6 +113,11 @@ const styles = {
     border: `1px solid ${colors.rule}`,
     borderRadius: 4,
     overflow: "hidden",
+  },
+  filterGroup: {
+    display: "flex",
+    gap: 8,
+    flexWrap: "wrap",
   },
   filter: {
     padding: "8px 14px",

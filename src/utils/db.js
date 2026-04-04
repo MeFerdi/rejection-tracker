@@ -1,5 +1,5 @@
 const DB_NAME    = "rejection-tracker";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const STORE      = "applications";
 
 // ── Open / upgrade database ──────────────────
@@ -9,12 +9,14 @@ function openDB() {
 
     req.onupgradeneeded = (e) => {
       const db = e.target.result;
-      if (!db.objectStoreNames.contains(STORE)) {
-        const store = db.createObjectStore(STORE, { keyPath: "id" });
-        store.createIndex("by_date",   "date",   { unique: false });
-        store.createIndex("by_status", "status", { unique: false });
-        store.createIndex("by_company","company", { unique: false });
-      }
+      const store = db.objectStoreNames.contains(STORE)
+        ? e.target.transaction.objectStore(STORE)
+        : db.createObjectStore(STORE, { keyPath: "id" });
+
+      if (!store.indexNames.contains("by_date"))     store.createIndex("by_date",   "date",   { unique: false });
+      if (!store.indexNames.contains("by_status"))   store.createIndex("by_status", "status", { unique: false });
+      if (!store.indexNames.contains("by_company"))  store.createIndex("by_company","company", { unique: false });
+      if (!store.indexNames.contains("by_category")) store.createIndex("by_category","category", { unique: false });
     };
 
     req.onsuccess  = () => resolve(req.result);
@@ -37,7 +39,7 @@ async function tx(mode, fn) {
 
 // ── CRUD operations ──────────────────────────
 
-/** Fetch all applications, sorted by date descending */
+/** Fetch all applications, sorted by latest activity descending */
 export async function getAll() {
   const db    = await openDB();
   const trans = db.transaction(STORE, "readonly");
@@ -47,7 +49,7 @@ export async function getAll() {
     req.onsuccess = () =>
       resolve(
         (req.result ?? []).sort(
-          (a, b) => new Date(b.date) - new Date(a.date)
+          (a, b) => new Date(b.updatedAt || b.statusDate || b.date) - new Date(a.updatedAt || a.statusDate || a.date)
         )
       );
     req.onerror = () => reject(req.error);

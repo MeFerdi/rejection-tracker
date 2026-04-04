@@ -1,10 +1,10 @@
-// ─────────────────────────────────────────────
-// views/AddEdit.jsx
-// ─────────────────────────────────────────────
-
-import { fonts, colors, STATUS_CONFIG } from "../styles/theme";
+import { fonts, colors, STATUS_CONFIG, CATEGORY_CONFIG, PRIORITY_CONFIG } from "../styles/theme";
 
 export default function AddEdit({ form, setForm, editId, onSubmit, onCancel }) {
+  const history = Array.isArray(form.statusHistory) && form.statusHistory.length
+    ? form.statusHistory
+    : [{ status: form.status, date: form.statusDate || form.date, note: "" }];
+
   const field = (key, label, placeholder, type = "text") => (
     <div style={styles.field}>
       <label style={styles.label}>{label}</label>
@@ -34,18 +34,134 @@ export default function AddEdit({ form, setForm, editId, onSubmit, onCancel }) {
 
         <div style={styles.grid2}>
           <div style={styles.field}>
-            <label style={styles.label}>Status</label>
+            <label style={styles.label}>Category</label>
+            <select
+              style={styles.select}
+              value={form.category}
+              onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
+            >
+              {Object.keys(CATEGORY_CONFIG).map((category) => (
+                <option key={category}>{category}</option>
+              ))}
+            </select>
+          </div>
+
+          <div style={styles.field}>
+            <label style={styles.label}>Priority</label>
+            <select
+              style={styles.select}
+              value={form.priority}
+              onChange={(e) => setForm((f) => ({ ...f, priority: e.target.value }))}
+            >
+              {Object.keys(PRIORITY_CONFIG).map((priority) => (
+                <option key={priority}>{priority}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div style={styles.grid2}>
+          {field("date", "Date Applied", "", "date")}
+          {field("followUpDate", "Follow-up Reminder", "", "date")}
+        </div>
+
+        <div style={styles.grid2}>
+          <div style={styles.field}>
+            <label style={styles.label}>Current Status</label>
             <select
               style={styles.select}
               value={form.status}
-              onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}
+              onChange={(e) => setForm((f) => ({
+                ...f,
+                status: e.target.value,
+                statusHistory: f.statusHistory?.length
+                  ? f.statusHistory.map((entry, index) => index === f.statusHistory.length - 1
+                    ? { ...entry, status: e.target.value }
+                    : entry)
+                  : [{ status: e.target.value, date: f.statusDate || f.date, note: "" }],
+              }))}
             >
               {Object.keys(STATUS_CONFIG).map((s) => (
                 <option key={s}>{s}</option>
               ))}
             </select>
           </div>
-          {field("date", "Date Applied", "", "date")}
+          {field("statusDate", "Current Status Date", "", "date")}
+        </div>
+
+        <div style={styles.historySection}>
+          <div style={styles.historyHeader}>
+            <label style={styles.label}>Stage History</label>
+            <button
+              type="button"
+              style={styles.smallBtn}
+              onClick={() => setForm((f) => ({
+                ...f,
+                statusHistory: [
+                  ...(f.statusHistory || []),
+                  { status: f.status || "Applied", date: f.statusDate || f.date || "", note: "" },
+                ],
+              }))}
+            >
+              + Add stage
+            </button>
+          </div>
+
+          <div style={styles.historyList}>
+            {history.map((entry, index) => (
+              <div key={`${entry.status}-${index}`} style={styles.historyRow}>
+                <select
+                  style={styles.historySelect}
+                  value={entry.status}
+                  onChange={(e) => setForm((f) => ({
+                    ...f,
+                    statusHistory: (f.statusHistory || history).map((item, i) => i === index
+                      ? { ...item, status: e.target.value }
+                      : item),
+                    status: index === history.length - 1 ? e.target.value : f.status,
+                  }))}
+                >
+                  {Object.keys(STATUS_CONFIG).map((s) => (
+                    <option key={s}>{s}</option>
+                  ))}
+                </select>
+                <input
+                  type="date"
+                  style={styles.historyDate}
+                  value={entry.date}
+                  onChange={(e) => setForm((f) => ({
+                    ...f,
+                    statusHistory: (f.statusHistory || history).map((item, i) => i === index
+                      ? { ...item, date: e.target.value }
+                      : item),
+                    statusDate: index === history.length - 1 ? e.target.value : f.statusDate,
+                  }))}
+                />
+                <input
+                  type="text"
+                  style={styles.historyNote}
+                  placeholder="Note"
+                  value={entry.note || ""}
+                  onChange={(e) => setForm((f) => ({
+                    ...f,
+                    statusHistory: (f.statusHistory || history).map((item, i) => i === index
+                      ? { ...item, note: e.target.value }
+                      : item),
+                  }))}
+                />
+                <button
+                  type="button"
+                  style={styles.removeBtn}
+                  onClick={() => setForm((f) => ({
+                    ...f,
+                    statusHistory: (f.statusHistory || history).filter((_, i) => i !== index),
+                  }))}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div style={styles.field}>
@@ -133,6 +249,79 @@ const styles = {
     background: colors.offwhite,
     outline: "none",
     boxSizing: "border-box",
+  },
+  historySection: {
+    marginTop: 4,
+    marginBottom: 18,
+    padding: 16,
+    border: `1px solid ${colors.rule}`,
+    borderRadius: 6,
+    background: colors.offwhite,
+  },
+  historyHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 10,
+    marginBottom: 12,
+  },
+  smallBtn: {
+    border: `1px solid ${colors.rule}`,
+    background: colors.paper,
+    color: colors.ink,
+    borderRadius: 999,
+    fontFamily: fonts.body,
+    fontSize: 11,
+    padding: "6px 10px",
+    cursor: "pointer",
+  },
+  historyList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 8,
+  },
+  historyRow: {
+    display: "grid",
+    gridTemplateColumns: "1fr 140px 1.2fr auto",
+    gap: 8,
+    alignItems: "center",
+  },
+  historySelect: {
+    padding: "9px 10px",
+    border: `1px solid ${colors.rule}`,
+    borderRadius: 4,
+    background: colors.paper,
+    fontFamily: fonts.body,
+    fontSize: 13,
+    color: colors.ink,
+  },
+  historyDate: {
+    padding: "9px 10px",
+    border: `1px solid ${colors.rule}`,
+    borderRadius: 4,
+    background: colors.paper,
+    fontFamily: fonts.body,
+    fontSize: 13,
+    color: colors.ink,
+  },
+  historyNote: {
+    padding: "9px 10px",
+    border: `1px solid ${colors.rule}`,
+    borderRadius: 4,
+    background: colors.paper,
+    fontFamily: fonts.body,
+    fontSize: 13,
+    color: colors.ink,
+  },
+  removeBtn: {
+    border: "none",
+    background: "transparent",
+    color: colors.rejected,
+    fontFamily: fonts.body,
+    fontSize: 12,
+    cursor: "pointer",
+    padding: 0,
+    textDecoration: "underline",
   },
   textarea: {
     width: "100%",

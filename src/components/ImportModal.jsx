@@ -1,11 +1,3 @@
-// ─────────────────────────────────────────────
-// Full import flow:
-//   1. Drop / select CSV file
-//   2. Parse + preview what will be added
-//   3. Resolve any status conflicts
-//   4. Confirm → write to IndexedDB
-// ─────────────────────────────────────────────
-
 import { useState, useRef } from "react";
 import { fonts, colors, STATUS_CONFIG } from "../styles/theme";
 import { mergeImport } from "../utils/importCSV";
@@ -65,7 +57,7 @@ export default function ImportModal({ existingApps, onComplete, onClose }) {
     // Apply conflict resolutions
     for (const c of conflicts) {
       if (c.choice === "incoming") {
-        await updateApp({ ...c.existing, status: c.incoming.status });
+        await updateApp({ ...c.existing, ...c.incoming });
         updated++;
       }
     }
@@ -151,6 +143,9 @@ export default function ImportModal({ existingApps, onComplete, onClose }) {
                       <span style={{ ...styles.previewBadge, color: STATUS_CONFIG[a.status]?.color }}>
                         {a.status}
                       </span>
+                      <span style={{ ...styles.previewBadge, color: colors.muted }}>
+                        {a.category}
+                      </span>
                     </div>
                   ))}
                   {result.toAdd.length > 8 && (
@@ -166,7 +161,7 @@ export default function ImportModal({ existingApps, onComplete, onClose }) {
             {conflicts.length > 0 && (
               <div style={styles.section}>
                 <div style={styles.sectionLabel}>
-                  Status conflicts — choose which version to keep
+                  Record conflicts — choose which version to keep
                 </div>
                 {conflicts.map((c, i) => (
                   <div key={i} style={styles.conflictRow}>
@@ -233,7 +228,7 @@ export default function ImportModal({ existingApps, onComplete, onClose }) {
             <div style={styles.doneTitle}>Import complete</div>
             <div style={styles.doneCounts}>
               {summary.added   > 0 && <span>{summary.added} records added</span>}
-              {summary.updated > 0 && <span>{summary.updated} statuses updated</span>}
+              {summary.updated > 0 && <span>{summary.updated} records updated</span>}
               {summary.skipped > 0 && <span>{summary.skipped} duplicates skipped</span>}
             </div>
             <button style={styles.confirmBtn} onClick={onClose}>Done</button>
