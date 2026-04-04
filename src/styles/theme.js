@@ -1,10 +1,4 @@
-// ─────────────────────────────────────────────
-// THEME — Inspired by TYPE01's editorial aesthetic
-// Fonts: Playfair Display (display) + DM Sans (body)
-// Palette: Paper white, ink black, warm mid-tones
-// ─────────────────────────────────────────────
-
-export const fonts = {
+ const fonts = {
   display: `'Playfair Display', Georgia, serif`,
   body: `'DM Sans', 'Helvetica Neue', sans-serif`,
   mono: `'DM Mono', 'Courier New', monospace`,
@@ -25,6 +19,18 @@ export const colors = {
   rejected:  "#B04040",
   offer:     "#3A7D5A",
 
+  // Categories — balanced accent set
+  job:         "#5C6F7F",
+  internship:  "#7A5C9E",
+  grant:       "#4D8C7A",
+  scholarship: "#A06A4A",
+  fellowship:  "#8B5E6B",
+
+  // Priority — clear, compact triage cues
+  priorityHigh:   "#B04040",
+  priorityMedium: "#C4882B",
+  priorityLow:    "#4A6FA5",
+
   // Borders
   rule:    "#DEDAD4",
   ruleDark:"#2A2826",
@@ -35,6 +41,20 @@ export const STATUS_CONFIG = {
   Interview: { color: colors.interview, dot: "◐", label: "Interview" },
   Rejected:  { color: colors.rejected,  dot: "●", label: "Rejected"  },
   Offer:     { color: colors.offer,     dot: "★", label: "Offer"     },
+};
+
+export const CATEGORY_CONFIG = {
+  Job:         { color: colors.job,         label: "Job" },
+  Internship:  { color: colors.internship,  label: "Internship" },
+  Grant:       { color: colors.grant,       label: "Grant" },
+  Scholarship: { color: colors.scholarship, label: "Scholarship" },
+  Fellowship:  { color: colors.fellowship,  label: "Fellowship" },
+};
+
+export const PRIORITY_CONFIG = {
+  High:   { color: colors.priorityHigh, label: "High" },
+  Medium: { color: colors.priorityMedium, label: "Medium" },
+  Low:    { color: colors.priorityLow, label: "Low" },
 };
 
 export const GOAL = 1000;
