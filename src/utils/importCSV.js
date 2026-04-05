@@ -1,3 +1,5 @@
+import { CATEGORY_CONFIG, STATUS_CONFIG } from "../styles/theme";
+
 const VALID_STATUSES = Object.keys(STATUS_CONFIG);
 const VALID_CATEGORIES = Object.keys(CATEGORY_CONFIG);
 
