@@ -67,7 +67,8 @@ export default function App() {
   }
 
   return (
-    <div style={styles.shell}>
+    <div className="app-shell" style={styles.shell}>
+      <a className="skip-link" href="#main-content">Skip to content</a>
       {!isOnline       && <OfflineBar />}
       {updateAvailable && <UpdateBar onUpdate={applyUpdate} />}
       {canInstall && showInstall && (
@@ -84,7 +85,7 @@ export default function App() {
         onImport={() => setShowImport(true)}
       />
 
-      <main style={styles.main}>
+      <main id="main-content" className="app-main" style={styles.main}>
         {view === "dashboard" && <Dashboard apps={apps} stats={stats} />}
         {view === "board"     && <Board apps={apps} onEdit={handleEdit} onDelete={remove} />}
         {view === "log"       && <Log apps={apps} onEdit={handleEdit} onDelete={remove} />}

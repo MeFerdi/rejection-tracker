@@ -11,7 +11,7 @@ export default function AppRow({ app, index, onEdit, onDelete }) {
   const isFollowUpDue = app.followUpDate && new Date(app.followUpDate) <= new Date();
 
   return (
-    <div style={styles.row}>
+    <div className="app-row" style={styles.row}>
       <div style={styles.index}>{String(index).padStart(3, "0")}</div>
 
       <div style={styles.main}>
@@ -68,16 +68,16 @@ export default function AppRow({ app, index, onEdit, onDelete }) {
         )}
       </div>
 
-      <div style={styles.right}>
+      <div className="app-row-right" style={styles.right}>
         <span style={{ ...styles.categoryBadge, color: categoryCfg.color, borderColor: categoryCfg.color + "44" }}>
           {categoryCfg.label}
         </span>
         <span style={{ ...styles.badge, color: cfg.color, borderColor: cfg.color + "44" }}>
           {cfg.dot} {cfg.label}
         </span>
-        <div style={styles.actions}>
-          <button style={styles.actionBtn} onClick={() => onEdit(app)}>Edit</button>
-          <button style={{ ...styles.actionBtn, color: colors.rejected }} onClick={() => onDelete(app.id)}>Delete</button>
+        <div className="app-row-actions" style={styles.actions}>
+          <button type="button" style={styles.actionBtn} onClick={() => onEdit(app)} aria-label={`Edit application at ${app.company}`}>Edit</button>
+          <button type="button" style={{ ...styles.actionBtn, color: colors.rejected }} onClick={() => onDelete(app.id)} aria-label={`Delete application at ${app.company}`}>Delete</button>
         </div>
       </div>
     </div>
@@ -265,7 +265,7 @@ const styles = {
     flexDirection: "column",
     alignItems: "flex-end",
     gap: 8,
-    minWidth: 110,
+    minWidth: 140,
   },
   badge: {
     fontFamily: fonts.body,

@@ -18,18 +18,18 @@ export default function Board({ apps, onEdit, onDelete }) {
   }, [apps]);
 
   return (
-    <div style={styles.page}>
+    <div className="page-pad" style={styles.page}>
       <div style={styles.toolbar}>
         <div style={styles.title}>Pipeline Board</div>
         <div style={styles.subtitle}>Track each application as it moves through the funnel.</div>
       </div>
 
-      <div style={styles.board}>
+      <div className="board-grid" style={styles.board}>
         {BOARD_STATUSES.map((status) => {
           const cfg = STATUS_CONFIG[status];
           const items = grouped[status] || [];
           return (
-            <section key={status} style={styles.column}>
+            <section key={status} className="board-column" style={styles.column}>
               <header style={styles.columnHeader}>
                 <div style={styles.columnTitleWrap}>
                   <span style={{ ...styles.columnDot, background: cfg.color }} />
@@ -71,8 +71,8 @@ export default function Board({ apps, onEdit, onDelete }) {
                       </div>
 
                       <div style={styles.actions}>
-                        <button style={styles.action} onClick={() => onEdit(app)}>Edit</button>
-                        <button style={{ ...styles.action, color: colors.rejected }} onClick={() => onDelete(app.id)}>Delete</button>
+                        <button type="button" style={styles.action} onClick={() => onEdit(app)} aria-label={`Edit ${app.company} ${app.role}`}>Edit</button>
+                        <button type="button" style={{ ...styles.action, color: colors.rejected }} onClick={() => onDelete(app.id)} aria-label={`Delete ${app.company} ${app.role}`}>Delete</button>
                       </div>
                     </article>
                   );
@@ -107,7 +107,7 @@ const styles = {
   },
   board: {
     display: "grid",
-    gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
     gap: 16,
     alignItems: "start",
   },

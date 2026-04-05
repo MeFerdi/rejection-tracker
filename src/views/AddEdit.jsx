@@ -19,23 +19,24 @@ export default function AddEdit({ form, setForm, editId, onSubmit, onCancel }) {
   );
 
   return (
-    <div style={styles.page}>
-      <div style={styles.card}>
+    <div className="page-pad" style={styles.page}>
+      <div className="addedit-card" style={styles.card}>
         <div style={styles.heading}>
           {editId ? "Edit Application" : "Log New Application"}
         </div>
 
-        <div style={styles.grid2}>
+        <div className="addedit-grid" style={styles.grid2}>
           {field("company",  "Company *",      "e.g. Safaricom")}
           {field("role",     "Role *",          "e.g. Product Manager")}
           {field("location", "Location",        "e.g. Nairobi / Remote")}
           {field("salary",   "Salary Range",    "e.g. KES 120k – 180k")}
         </div>
 
-        <div style={styles.grid2}>
+        <div className="addedit-grid" style={styles.grid2}>
           <div style={styles.field}>
             <label style={styles.label}>Category</label>
             <select
+              className="addedit-select"
               style={styles.select}
               value={form.category}
               onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
@@ -49,6 +50,7 @@ export default function AddEdit({ form, setForm, editId, onSubmit, onCancel }) {
           <div style={styles.field}>
             <label style={styles.label}>Priority</label>
             <select
+              className="addedit-select"
               style={styles.select}
               value={form.priority}
               onChange={(e) => setForm((f) => ({ ...f, priority: e.target.value }))}
@@ -60,15 +62,16 @@ export default function AddEdit({ form, setForm, editId, onSubmit, onCancel }) {
           </div>
         </div>
 
-        <div style={styles.grid2}>
+        <div className="addedit-grid" style={styles.grid2}>
           {field("date", "Date Applied", "", "date")}
           {field("followUpDate", "Follow-up Reminder", "", "date")}
         </div>
 
-        <div style={styles.grid2}>
+        <div className="addedit-grid" style={styles.grid2}>
           <div style={styles.field}>
             <label style={styles.label}>Current Status</label>
             <select
+              className="addedit-select"
               style={styles.select}
               value={form.status}
               onChange={(e) => setForm((f) => ({
@@ -109,8 +112,9 @@ export default function AddEdit({ form, setForm, editId, onSubmit, onCancel }) {
 
           <div style={styles.historyList}>
             {history.map((entry, index) => (
-              <div key={`${entry.status}-${index}`} style={styles.historyRow}>
+                <div key={`${entry.status}-${index}`} className="addedit-history-row" style={styles.historyRow}>
                 <select
+                    className="addedit-select"
                   style={styles.historySelect}
                   value={entry.status}
                   onChange={(e) => setForm((f) => ({
@@ -127,6 +131,7 @@ export default function AddEdit({ form, setForm, editId, onSubmit, onCancel }) {
                 </select>
                 <input
                   type="date"
+                  className="addedit-input"
                   style={styles.historyDate}
                   value={entry.date}
                   onChange={(e) => setForm((f) => ({
@@ -139,6 +144,7 @@ export default function AddEdit({ form, setForm, editId, onSubmit, onCancel }) {
                 />
                 <input
                   type="text"
+                  className="addedit-input"
                   style={styles.historyNote}
                   placeholder="Note"
                   value={entry.note || ""}
@@ -175,11 +181,11 @@ export default function AddEdit({ form, setForm, editId, onSubmit, onCancel }) {
         </div>
 
         <div style={styles.actions}>
-          <button style={styles.submit} onClick={onSubmit}>
+            <button type="button" style={styles.submit} onClick={onSubmit}>
             {editId ? "Save Changes" : "Log Application"}
           </button>
           {editId && (
-            <button style={styles.cancel} onClick={onCancel}>Cancel</button>
+            <button type="button" style={styles.cancel} onClick={onCancel}>Cancel</button>
           )}
         </div>
       </div>
