@@ -19,22 +19,26 @@ export default function Log({ apps, onEdit, onDelete }) {
   }, [apps, search, filterStatus, filterCategory]);
 
   return (
-    <div style={styles.page}>
+    <div className="page-pad" style={styles.page}>
       {/* Toolbar */}
-      <div style={styles.toolbar}>
+      <div className="log-toolbar" style={styles.toolbar}>
         <input
+          className="log-search"
           style={styles.search}
           placeholder="Search company or role…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          aria-label="Search applications by company or role"
         />
-        <div style={styles.filterGroup}>
+        <div className="log-filter-group" style={styles.filterGroup}>
           <div style={styles.filters}>
             {["All", ...Object.keys(STATUS_CONFIG)].map((s) => (
               <button
                 key={s}
+                type="button"
                 style={filterStatus === s ? styles.filterActive : styles.filter}
                 onClick={() => setFilterStatus(s)}
+                aria-pressed={filterStatus === s}
               >
                 {s}
               </button>
@@ -44,15 +48,17 @@ export default function Log({ apps, onEdit, onDelete }) {
             {["All", ...Object.keys(CATEGORY_CONFIG)].map((s) => (
               <button
                 key={s}
+                type="button"
                 style={filterCategory === s ? styles.filterActive : styles.filter}
                 onClick={() => setFilterCategory(s)}
+                aria-pressed={filterCategory === s}
               >
                 {s}
               </button>
             ))}
           </div>
         </div>
-        <span style={styles.count}>{filtered.length} entries</span>
+        <span className="log-count" style={styles.count} aria-live="polite">{filtered.length} entries</span>
       </div>
 
       {/* Column headers */}
@@ -60,7 +66,7 @@ export default function Log({ apps, onEdit, onDelete }) {
         <div style={styles.colHeader}>
           <span style={{ width: 36 }}>#</span>
           <span style={{ flex: 1 }}>Company / Role</span>
-          <span>Status</span>
+            <span>Category / Status</span>
         </div>
       )}
 
