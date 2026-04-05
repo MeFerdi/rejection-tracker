@@ -30,11 +30,11 @@ export default function Dashboard({ apps, stats }) {
   );
 
   return (
-    <div style={styles.page}>
+    <div className="page-pad" style={styles.page}>
       <ProgressBar count={apps.length} />
 
       {/* Stat row */}
-      <div style={styles.statGrid}>
+      <div className="dashboard-grid" style={styles.statGrid}>
         {Object.entries(STATUS_CONFIG).map(([status, cfg]) => (
           <StatCard
             key={status}
@@ -51,7 +51,7 @@ export default function Dashboard({ apps, stats }) {
         />
       </div>
 
-      <div style={styles.statGridSecondary}>
+      <div className="dashboard-grid-secondary" style={styles.statGridSecondary}>
         <StatCard label="Active Pipeline" value={analytics.activePipeline} color={colors.job} sub="applied + interview" />
         <StatCard label="Interview Rate" value={`${analytics.interviewRate}%`} color={colors.interview} sub="of total applications" />
         <StatCard label="Offer Rate" value={`${analytics.offerRate}%`} color={colors.offer} sub="of total applications" />
@@ -59,10 +59,10 @@ export default function Dashboard({ apps, stats }) {
         <StatCard label="Overdue Follow-ups" value={analytics.overdueFollowUps} color={colors.rejected} sub="needs attention" />
       </div>
 
-      <div style={{ ...styles.card, marginBottom: 20 }}>
+      <div className="dashboard-card" style={{ ...styles.card, marginBottom: 20 }}>
         {sectionTitle("Applications by Category")}
-        <div style={styles.categoryGrid}>
-        {Object.entries(CATEGORY_CONFIG).map(([category, cfg]) => (
+        <div className="dashboard-category-grid" style={styles.categoryGrid}>
+          {Object.entries(CATEGORY_CONFIG).map(([category, cfg]) => (
             <div key={category} style={styles.categoryCard}>
               <div style={styles.categoryHead}>
                 <span style={{ ...styles.categoryDot, background: cfg.color }} />
@@ -78,11 +78,11 @@ export default function Dashboard({ apps, stats }) {
 
       {/* Charts row */}
       <div style={styles.chartGrid}>
-        <div style={styles.card}>
+        <div className="dashboard-card" style={styles.card}>
           {sectionTitle("Status Breakdown")}
           <StatusPie stats={stats} />
         </div>
-        <div style={styles.card}>
+        <div className="dashboard-card" style={styles.card}>
           {sectionTitle("Monthly Volume")}
           <MonthlyBar apps={apps} />
         </div>
@@ -90,7 +90,7 @@ export default function Dashboard({ apps, stats }) {
 
       {/* Weekly stack */}
       {apps.length > 0 && (
-        <div style={{ ...styles.card, marginTop: 20 }}>
+        <div className="dashboard-card" style={{ ...styles.card, marginTop: 20 }}>
           {sectionTitle("Weekly Activity by Status")}
           <WeeklyStack apps={apps} />
         </div>
@@ -103,24 +103,24 @@ const styles = {
   page: { padding: "32px 40px" },
   statGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(5, 1fr)",
+    gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
     gap: 16,
     marginBottom: 24,
   },
   statGridSecondary: {
     display: "grid",
-    gridTemplateColumns: "repeat(5, 1fr)",
+    gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
     gap: 16,
     marginBottom: 24,
   },
   chartGrid: {
     display: "grid",
-    gridTemplateColumns: "1fr 2fr",
+    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
     gap: 20,
   },
   categoryGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
+    gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
     gap: 12,
   },
   categoryCard: {
