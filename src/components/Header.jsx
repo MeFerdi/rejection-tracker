@@ -10,8 +10,8 @@ export default function Header({ view, setView, apps, onImport }) {
   ];
 
   return (
-    <header style={styles.header}>
-      <div style={styles.brand}>
+    <header className="header-wrap" style={styles.header}>
+      <div className="header-stack" style={styles.brand}>
         <span style={styles.brandMark}>✕</span>
         <div>
           <div style={styles.brandTitle}>1000 Challenge</div>
@@ -19,10 +19,12 @@ export default function Header({ view, setView, apps, onImport }) {
         </div>
       </div>
 
-      <nav style={styles.nav}>
+      <nav className="header-nav" style={styles.nav} aria-label="Primary navigation">
         {NAV.map(({ key, label }) => (
           <button
             key={key}
+            type="button"
+            aria-current={view === key ? "page" : undefined}
             style={view === key ? styles.navActive : styles.navItem}
             onClick={() => setView(key)}
           >
@@ -31,14 +33,14 @@ export default function Header({ view, setView, apps, onImport }) {
         ))}
       </nav>
 
-      <div style={styles.actions}>
+      <div className="header-actions" style={styles.actions}>
         {/* Import — always visible so you can sync on a fresh device */}
-        <button style={styles.importBtn} onClick={onImport} title="Import CSV from another device">
+        <button type="button" style={styles.importBtn} onClick={onImport} title="Import CSV from another device" aria-label="Import applications from CSV">
           ↑ Import
         </button>
 
         {apps.length > 0 && (
-          <button style={styles.exportBtn} onClick={() => exportToCSV(apps)} title="Export to CSV">
+          <button type="button" style={styles.exportBtn} onClick={() => exportToCSV(apps)} title="Export to CSV" aria-label="Export applications to CSV">
             ↓ Export
           </button>
         )}
@@ -91,6 +93,7 @@ const styles = {
     border: `1px solid ${colors.rule}`,
     borderRadius: 6,
     overflow: "hidden",
+    maxWidth: "100%",
   },
   navItem: {
     padding: "8px 20px",
@@ -101,6 +104,7 @@ const styles = {
     fontSize: 13,
     color: colors.muted,
     cursor: "pointer",
+    minHeight: 44,
   },
   navActive: {
     padding: "8px 20px",
@@ -112,11 +116,13 @@ const styles = {
     color: colors.paper,
     cursor: "pointer",
     fontWeight: 600,
+    minHeight: 44,
   },
   actions: {
     display: "flex",
     gap: 8,
     alignItems: "center",
+    flexWrap: "wrap",
   },
   importBtn: {
     padding: "8px 16px",
@@ -127,6 +133,7 @@ const styles = {
     fontSize: 13,
     color: colors.muted,
     cursor: "pointer",
+    minHeight: 44,
   },
   exportBtn: {
     padding: "8px 16px",
@@ -138,5 +145,6 @@ const styles = {
     color: colors.ink,
     cursor: "pointer",
     letterSpacing: "0.02em",
+    minHeight: 44,
   },
 };
